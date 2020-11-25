@@ -7,7 +7,7 @@
 
 import UIKit
 
-// class describes some logical methods
+// class implements some logical methods
 
 class Manager: NSObject {
     
@@ -31,13 +31,5 @@ class Manager: NSObject {
             }
         return datesStringArray
     }
-    
-//    let dateFormatter = DateFormatter()
-//
-//    func timeFormatter(date: Date) -> String {
-//        dateFormatter.locale = Locale(identifier: "ru_RU")
-//        let stringDate = dateFormatter.string(from: date)
-//        return stringDate
-//    }
     
 }

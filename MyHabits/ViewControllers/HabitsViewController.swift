@@ -9,34 +9,23 @@ import UIKit
 
 class HabitsViewController: UIViewController {
     
-
-    
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        collectionView.reloadData()
+        self.navigationController?.navigationBar.prefersLargeTitles = true
+        navigationController?.navigationBar.tintColor = .customMagenta
+        navigationItem.title = "Сегодня"
+        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(presentModallyHabitVC))
     }
     
     override func viewWillAppear(_ animated: Bool) {
         collectionView.reloadData()
+        self.navigationController?.navigationBar.prefersLargeTitles = true
+        self.navigationItem.largeTitleDisplayMode = .always
     }
     
     
     //MARK: - Views
-    
-    private lazy var navigationBar: UINavigationBar = {
-        let navigationBar: UINavigationBar = UINavigationBar()
-        navigationBar.backgroundColor = .white
-        navigationBar.barTintColor = .white
-        navigationBar.tintColor = .customMagenta
-        navigationBar.prefersLargeTitles = true
-        navigationItem.largeTitleDisplayMode = .always
-        let navigationItem = UINavigationItem(title: "Сегодня")
-        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(presentModallyHabitVC))
-        navigationBar.setItems([navigationItem], animated: false)
-        
-        return navigationBar
-    }()
     
      private lazy var collectionView: UICollectionView = {
         
@@ -60,20 +49,14 @@ class HabitsViewController: UIViewController {
     //MARK: - Layout setup
     
     override func viewWillLayoutSubviews() {
-        
-        view.addSubviews(navigationBar)
+
         view.addSubviews(collectionView)
         
         NSLayoutConstraint.activate([
-        
-            navigationBar.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            navigationBar.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            navigationBar.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            navigationBar.heightAnchor.constraint(equalToConstant: 88),
             
             collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            collectionView.topAnchor.constraint(equalTo: navigationBar.bottomAnchor),
+            collectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
             
         ])
@@ -84,8 +67,10 @@ class HabitsViewController: UIViewController {
     @objc func presentModallyHabitVC() {
         let storyBoard = UIStoryboard(name: "Main", bundle: nil)
         let habitVC = storyBoard.instantiateViewController(withIdentifier: String(describing: HabitViewController.self))
-        habitVC.modalPresentationStyle = .fullScreen
-        self.show(habitVC, sender: self)
+        let habitVCNavigationController = UINavigationController(rootViewController: habitVC)
+        habitVCNavigationController.modalPresentationStyle = .fullScreen
+        self.present(habitVCNavigationController, animated: true, completion: nil)
+
     }
 
 }
@@ -96,14 +81,14 @@ extension HabitsViewController: UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
-        let habitDetailVC = storyboard?.instantiateViewController(withIdentifier: String(describing: HabitDetailViewController.self)) as! HabitDetailViewController
-        habitDetailVC.navigationBar.topItem?.title = HabitsStore.shared.habits[indexPath.item].name
-        habitDetailVC.modalPresentationStyle = .fullScreen
-        
         let habit = HabitsStore.shared.habits[indexPath.item]
         Manager.shared.datesStringArray = Manager.shared.sendHabitToNewVC(habit: habit)
         Manager.shared.index = indexPath.item
-        self.show(habitDetailVC, sender: self)
+        
+        let destinationViewController = storyboard?.instantiateViewController(identifier: String(describing: HabitDetailViewController.self)) as! HabitDetailViewController
+        destinationViewController.modalPresentationStyle = .fullScreen
+        self.show(destinationViewController, sender: self)
+    
     }
 }
 

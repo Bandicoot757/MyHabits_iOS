@@ -11,21 +11,22 @@ class HabitDetailViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        guard let index = Manager.shared.index else {
+            return
+        }
+        self.navigationController?.navigationBar.tintColor = .customMagenta
+        self.navigationItem.title = HabitsStore.shared.habits[index].name
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Править", style: .plain, target: self, action: #selector(showEditPage))
+        self.navigationItem.leftBarButtonItem?.action = #selector(cancel)
     }
     
-    //MARK: - Views
+    override func viewWillAppear(_ animated: Bool) {
+        self.navigationItem.largeTitleDisplayMode = .never
+    }
     
-     lazy var navigationBar: UINavigationBar = {
-        let navigationBar: UINavigationBar = UINavigationBar()
-        navigationBar.backgroundColor = .white
-        navigationBar.barTintColor = .white
-        navigationBar.tintColor = .customMagenta
-        let navigationItem = UINavigationItem(title: "")
-        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Сегодня", style: .plain, target: self, action: #selector(cancel))
-        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Править", style: .plain, target: self, action: #selector(showEditPage))
-        navigationBar.setItems([navigationItem], animated: false)
-        return navigationBar
-    }()
+
+    //MARK: - Views
 
     lazy var tableView: UITableView = {
         let tableView: UITableView = UITableView()
@@ -45,20 +46,14 @@ class HabitDetailViewController: UIViewController {
     //MARK: - Layout setup
 
     override func viewWillLayoutSubviews() {
-    
-        view.addSubviews(navigationBar)
+        
         view.addSubviews(tableView)
         
         NSLayoutConstraint.activate([
             
-            navigationBar.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            navigationBar.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            navigationBar.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            navigationBar.heightAnchor.constraint(equalToConstant: 44),
-            
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            tableView.topAnchor.constraint(equalTo: navigationBar.bottomAnchor, constant: 0),
+            tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             tableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
             
         ])
@@ -69,22 +64,12 @@ class HabitDetailViewController: UIViewController {
     }
     
     @objc func showEditPage() {
-        
-        let destinationViewController = storyboard?.instantiateViewController(identifier: String(describing: HabitViewController.self)) as! HabitViewController
-        destinationViewController.modalPresentationStyle = .fullScreen
-        
-        let habit = HabitsStore.shared.habits[Manager.shared.index!]
-        destinationViewController.nameTextField.text = habit.name
-        destinationViewController.nameTextField.textColor = habit.color
-        destinationViewController.colorButton.backgroundColor = habit.color
-        destinationViewController.editDateLabel.text = habit.dateString
-      
-        var mutableTextlabel = NSMutableAttributedString()
-        mutableTextlabel = NSMutableAttributedString(string: destinationViewController.editDateLabel.text!, attributes: [NSAttributedString.Key.font:UIFont.systemFont(ofSize: 17, weight: .regular)])
-        mutableTextlabel.addAttribute(NSAttributedString.Key.foregroundColor, value: UIColor.customMagenta, range: NSRange(location:13, length: mutableTextlabel.length-13))
-        destinationViewController.editDateLabel.attributedText = mutableTextlabel
-        destinationViewController.deleteHabitButton.isHidden = false
-        self.show(destinationViewController, sender: self)
+        let storyBoard = UIStoryboard(name: "Main", bundle: nil)
+        let habitVC = storyBoard.instantiateViewController(withIdentifier: String(describing: HabitViewController.self)) as! HabitViewController
+        let habitVCNavigationController = UINavigationController(rootViewController: habitVC)
+        habitVC.deleteHabitButton.isHidden = false
+        habitVCNavigationController.modalPresentationStyle = .fullScreen
+        self.present(habitVCNavigationController, animated: true, completion: nil)
     }
 
 }
@@ -98,29 +83,29 @@ extension HabitDetailViewController: UITableViewDelegate {
 extension HabitDetailViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        
+
         let headerView = UIView()
         let headerLabel = UILabel()
         headerView.backgroundColor = .systemGray6
         headerLabel.text = "АКТИВНОСТЬ"
         headerLabel.font = UIFont.systemFont(ofSize: 13, weight: .regular)
         headerLabel.textColor = .systemGray
-        
+
         self.view.addSubviews(headerView)
         headerView.addSubviews(headerLabel)
-        
+
         NSLayoutConstraint.activate([
-        
+
             headerView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             headerView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            
+
             headerLabel.leadingAnchor.constraint(equalTo: headerView.leadingAnchor, constant: 16),
             headerLabel.trailingAnchor.constraint(equalTo: headerView.trailingAnchor, constant: -16),
             headerLabel.topAnchor.constraint(equalTo: headerView.topAnchor, constant: 32),
             headerLabel.bottomAnchor.constraint(equalTo: headerView.bottomAnchor, constant: -8)
-            
+
         ])
-        
+
         return headerView
     }
     
@@ -140,7 +125,7 @@ extension HabitDetailViewController: UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: String(describing: HabitDetailTableViewCell.self), for: indexPath) as! HabitDetailTableViewCell
         
         if Manager.shared.datesStringArray.capacity != 0 {
-            cell.dateLabel.text = Manager.shared.datesStringArray[indexPath.row]
+            cell.dateLabel.text = HabitsStore.shared.trackDateString(forIndex: indexPath.row)
         } else {
             cell.dateLabel.text = ""
         }

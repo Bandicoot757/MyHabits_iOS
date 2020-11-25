@@ -112,6 +112,7 @@ class HabitsCollectionViewCell: UICollectionViewCell {
             checkButton.setBackgroundImage(.checkmark, for: .normal)
             checkButton.tintColor = habit?.color
             checkButton.backgroundColor = habit?.color
+            // здесь использование forced unwrapping считаю допустимым
             HabitsStore.shared.track(habit!)
             delegate?.refreshProgress()
             print(HabitsStore.shared.dates)
