@@ -23,6 +23,10 @@ class HabitDetailViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         self.navigationItem.largeTitleDisplayMode = .never
+        guard let index = Manager.shared.index else {
+            return
+        }
+        self.navigationItem.title = HabitsStore.shared.habits[index].name
     }
     
 

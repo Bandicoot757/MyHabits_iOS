@@ -115,7 +115,6 @@ class HabitsCollectionViewCell: UICollectionViewCell {
             // здесь использование forced unwrapping считаю допустимым
             HabitsStore.shared.track(habit!)
             delegate?.refreshProgress()
-            print(HabitsStore.shared.dates)
         }
     }
     

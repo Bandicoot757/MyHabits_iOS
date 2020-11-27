@@ -227,7 +227,9 @@ class HabitViewController: UIViewController {
             store.habits.append(newHabit)
         
             dismiss(animated: true, completion: nil)
+            
         } else {
+            
             let thisHabit = HabitsStore.shared.habits[Manager.shared.index!]
             thisHabit.name = nameTextField.text!
             thisHabit.color = colorButton.backgroundColor!
@@ -247,10 +249,12 @@ class HabitViewController: UIViewController {
     
     @objc func datePickerDateSelected() {
         let selectedTime = makeTimeString()
-        editDateLabel.text = "Каждый день в \(selectedTime)"
+        let textString: String = "Каждый день в "
+        let selectedTimeString: String = "\(selectedTime)"
+        editDateLabel.text = textString + selectedTimeString
         var mutableTextlabel = NSMutableAttributedString()
         mutableTextlabel = NSMutableAttributedString(string: editDateLabel.text!, attributes: [NSAttributedString.Key.font:UIFont.systemFont(ofSize: 17, weight: .regular)])
-        mutableTextlabel.addAttribute(NSAttributedString.Key.foregroundColor, value: UIColor.customMagenta, range: NSRange(location:13, length: mutableTextlabel.length-13))
+        mutableTextlabel.addAttribute(NSAttributedString.Key.foregroundColor, value: UIColor.customMagenta, range: NSRange(location: textString.count, length: selectedTimeString.count))
         editDateLabel.attributedText = mutableTextlabel
     }
     

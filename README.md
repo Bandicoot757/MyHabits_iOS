@@ -1,6 +1,12 @@
 #  MyHabits
+## Cписок изменений
 
-## beta 2 - список изменений
+## beta 3 
+
+* Улучшена логика атрибутов в HabitViewController (метод datePickerDateSelected())
+* После изменения имени привычки на экране HabitDetailViewController теперь обновляется заголовок
+
+## beta 2 
 
 * Убран пустой ViewController
 * Изменена логика NavigationController'ов
