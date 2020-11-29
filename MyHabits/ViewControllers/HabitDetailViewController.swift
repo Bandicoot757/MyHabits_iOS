@@ -29,7 +29,6 @@ class HabitDetailViewController: UIViewController {
         self.navigationItem.title = HabitsStore.shared.habits[index].name
     }
     
-
     //MARK: - Views
 
     lazy var tableView: UITableView = {
@@ -121,19 +120,25 @@ extension HabitDetailViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return Manager.shared.datesStringArray.count
+        return HabitsStore.shared.dates.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: String(describing: HabitDetailTableViewCell.self), for: indexPath) as! HabitDetailTableViewCell
         
-        if Manager.shared.datesStringArray.capacity != 0 {
-            cell.dateLabel.text = HabitsStore.shared.trackDateString(forIndex: indexPath.row)
+        if HabitsStore.shared.dates.capacity != 0 {
+            cell.dateLabel.text = Manager.shared.convertDateToString().reversed()[indexPath.row]
+            
+            if let index = Manager.shared.index {
+                let habit = HabitsStore.shared.habits[index]
+                if HabitsStore.shared.habit(habit, isTrackedIn: HabitsStore.shared.dates.reversed()[indexPath.row]) == true {
+                cell.accessoryType = .checkmark
+                }
+            }
         } else {
-            cell.dateLabel.text = ""
-        }
-        
+                cell.dateLabel.text = ""
+            }
         return cell
     }
     

@@ -124,9 +124,18 @@ extension HabitsViewController: UICollectionViewDataSource {
             
             cell.habit = HabitsStore.shared.habits[indexPath.item]
             let thisHabit = HabitsStore.shared.habits[indexPath.item]
-            let trackedDates = Manager.shared.sendHabitToNewVC(habit: thisHabit)
-            cell.repeatQuantityLabel.text = String("Подряд: \(trackedDates.count)")
             
+            var counter:Int = 0
+            for date in HabitsStore.shared.dates.reversed() {
+                if HabitsStore.shared.habit(thisHabit, isTrackedIn: date) {
+                    counter += 1
+                } else if !Calendar.current.isDateInToday(date) {
+                    break
+                }
+            }
+            
+            cell.repeatQuantityLabel.text = "Подряд: \(String(counter))"
+
             cell.checkButton.setBackgroundImage(.checkmark, for: .normal)
             
             if cell.habit?.isAlreadyTakenToday == true {

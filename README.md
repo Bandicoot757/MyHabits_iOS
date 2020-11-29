@@ -1,6 +1,14 @@
 #  MyHabits
 ## Cписок изменений
 
+## beta 4
+
+* Переработана логика habitDetailViewController: теперь показываются даты с момента установки приложения
+* Добавлены галочки на затреканных датах ячеек habitDetailViewController
+* Даты больше не идут в обратной последовательности
+* Переписана логика подсчета сколько раз подряд была выполнена привычка на HabitsViewController
+
+
 ## beta 3 
 
 * Улучшена логика атрибутов в HabitViewController (метод datePickerDateSelected())

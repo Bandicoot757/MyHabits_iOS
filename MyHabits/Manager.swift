@@ -32,4 +32,20 @@ class Manager: NSObject {
         return datesStringArray
     }
     
+    private lazy var dateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .medium
+        formatter.timeStyle = .none
+        formatter.doesRelativeDateFormatting = true
+        return formatter
+    }()
+    
+    func convertDateToString() -> [String] {
+        var stringDates: [String] = []
+        for date in 0..<HabitsStore.shared.dates.count {
+                stringDates.append(dateFormatter.string(from: HabitsStore.shared.dates[date]))
+        }
+        return stringDates
+    }
+    
 }
