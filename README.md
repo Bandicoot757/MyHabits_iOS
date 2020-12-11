@@ -1,4 +1,8 @@
 #  MyHabits
+
+## Карта зависимостей
+![alt tag](https://sun9-69.userapi.com/impg/6b7j-JK9fvcv_UIkV3kiCzDNSpYnJ5zIKsdizQ/hq5o1URVGd0.jpg?size=807x652&quality=96&sign=ac0b89e1507d9180dfa2bbd74d91d6e0&type=album )​
+
 ## Cписок изменений
 
 ## beta 4
